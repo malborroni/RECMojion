@@ -15,7 +15,6 @@
 
 <a name="overview"></a>
 ## &#9741; &nbsp; Overview
->>> Emojis-from-emotions <<<
 Just a start repository for the Advanced Machine Learning course.
 
 <br>
