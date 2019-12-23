@@ -1,6 +1,3 @@
-# Emojis-from-emotions
-Just a start repository for the Advanced Machine Learning course.
-
 <p align = "center">
   <a href="http://datascience.disco.unimib.it/it/"><img src ="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/DSunimib.png" width = "100%"></a>
 </p>
@@ -18,6 +15,8 @@ Just a start repository for the Advanced Machine Learning course.
 
 <a name="overview"></a>
 ## &#9741; &nbsp; Overview
+>>> Emojis-from-emotions <<<
+Just a start repository for the Advanced Machine Learning course.
 
 <br>
 
