@@ -38,8 +38,8 @@ Our slides presentation is available in the <a href="https://fakelink">slides</a
 
 &#8860; &nbsp; **Alessandro Borroni** 
 
-- *Current Studies*: Data Science Msc Student @ Università degli Studi di Milano-Bicocca (UniMiB) ;
-- *Background*: Laurea triennale in Economia e Commercio presso l'Università degli Studi di Milano-Bicocca.
+- *Current Studies*: Data Science M.Sc. Student at Università degli Studi di Milano-Bicocca (UniMiB);
+- *Background*: Bachelor degree in Business Economics at Università degli Studi di Milano-Bicocca (UniMiB).
 <br>
 
 <p align = "center">
@@ -49,8 +49,8 @@ Our slides presentation is available in the <a href="https://fakelink">slides</a
 
 &#8860; &nbsp; **Andrea Corvaglia**
 
-- *Current Studies*: Data Science Msc Student @ Università degli Studi di Milano-Bicocca (UniMiB) ;
-- *Background*: Bachelor degree in Physics @ Università degli Studi di Milano-Bicocca.
+- *Current Studies*: Data Science M.Sc. Student at Università degli Studi di Milano-Bicocca (UniMiB);
+- *Background*: Bachelor degree in Physics at Università degli Studi di Milano-Bicocca (UniMiB).
 <br>
 
 <p align = "center">
@@ -60,8 +60,8 @@ Our slides presentation is available in the <a href="https://fakelink">slides</a
 
 &#8860; &nbsp; **Massimiliano Perletti**
 
-- *Current Studies*: Data Science Msc Student @ Università degli Studi di Milano-Bicocca (UniMiB) ;
-- *Background*: Laurea triennale in Ingegneria dei materiali e delle nano-tecnologie presso il Politecnico di Milano.
+- *Current Studies*: Data Science M.Sc. Student at Università degli Studi di Milano-Bicocca (UniMiB);
+- *Background*: Bachelor degree in Ingegneria dei materiali e delle nano-tecnologie at Politecnico di Milano.
 <br>
 
 <p align = "center">
