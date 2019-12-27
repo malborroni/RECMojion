@@ -1,0 +1,15 @@
+Come clonare la repo su colab:
+
+!sudo apt-get install git-lfs
+!git lfs clone -l -s git://github.com/malborroni/Emojis-from-emotions cloned-repo
+%cd cloned-repo
+!ls
+
+
+VGGFACE2:
+
+Articolo
+- https://machinelearningmastery.com/how-to-perform-face-recognition-with-vggface2-convolutional-neural-network-in-keras/
+
+Repository
+- https://github.com/rcmalli/keras-vggface
