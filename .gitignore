@@ -1,0 +1,16 @@
+.ipynb_checkpoints
+parsing_data_files_cache
+*.aux
+*.gz
+*.idx
+*.log
+*.out
+*.toc
+.DS_Store
+.Rproj.user
+.Rhistory
+.Rapp.history
+.RData
+.Rprofile
+inspection_cache
+inspection_files
