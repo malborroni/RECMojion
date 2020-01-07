@@ -43,7 +43,7 @@ Our slides presentation is available in the <a href="https://fakelink">slides</a
 
 <p align = "center">
   <a href = "https://www.linkedin.com/in/alessandro-borroni-212947186/"><img src="https://github.com/malborroni/Foundations_of_Computer-Science/blob/master/images/Linkedin%20logo.png" width = "2.8%"></a>
-  <a href = "https://github.com/malborroni/"><img src="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/GitHub.png" width = "2.9%"></a>
+  <a href = "https://github.com/malborroni/"><img src="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/GitHub.png" width = "3%"></a>
 </p>
 
 &#8860; &nbsp; **Andrea Corvaglia**
@@ -54,7 +54,7 @@ Our slides presentation is available in the <a href="https://fakelink">slides</a
 
 <p align = "center">
   <a href = "https://www.linkedin.com/in/andrea-corvaglia1/"><img src="https://github.com/malborroni/Foundations_of_Computer-Science/blob/master/images/Linkedin%20logo.png" width = "2.8%"></a>
-  <a href = "https://github.com/andreacorvaglia1"><img src="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/GitHub.png" width = "2.9%"></a>
+  <a href = "https://github.com/andreacorvaglia1"><img src="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/GitHub.png" width = "3%"></a>
 </p>
 
 &#8860; &nbsp; **Massimiliano Perletti**
@@ -65,6 +65,6 @@ Our slides presentation is available in the <a href="https://fakelink">slides</a
 
 <p align = "center">
   <a href = "https://www.linkedin.com/in/massimilianoperletti/"><img src="https://github.com/malborroni/Foundations_of_Computer-Science/blob/master/images/Linkedin%20logo.png" width = "2.8%"></a>
-  <a href = "https://github.com/maxi93/"><img src="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/GitHub.png" width = "2.9%"></a>
+  <a href = "https://github.com/maxi93/"><img src="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/GitHub.png" width = "3%"></a>
 </p>
 
