@@ -2,7 +2,7 @@
   <a href="http://datascience.disco.unimib.it/it/"><img src ="https://raw.githubusercontent.com/malborroni/Foundations_of_Computer-Science/master/images/DSunimib.png" width = "100%"></a>
 </p>
 <p align="center">
-  <img src="https://i.dlpng.com/static/png/5285081-index-of-wp-content-themes-controlenter-img-loadingio-your-svg-loading-png-640_640_preview.png" width="25%">
+  <img src="https://github.com/malborroni/RECMojion/blob/master/images/miscellaneous/Logo%205.png" width="50%">
 </p>
   <h6 align="center">an Advanced Machine Learning Project</h6>
 <p align="center">
