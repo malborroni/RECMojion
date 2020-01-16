@@ -2,7 +2,7 @@ Qui di seguito si riporta una spiegazione sintetica per ognuno dei Notebook cons
 
  - "3-Fold_Generator"                » Script per la creazione di 3 fold con data augmentation per la cross validation
  - "Architecture_selection"          » Script per la valutazione di diverse architetture della CNN
- - "cut_selection_CNN"               » Script per la ricerca del taglio migliore con cui fare features extraction
+ - "Cut_selection_CNN"               » Script per la ricerca del taglio migliore con cui fare features extraction
  - "DEMO_Live"                       » Script per l'effettuazione di un test in tempo reale dell'efficacia del modello sviluppato
  - "HyperOpt"                        » Script per l'ottimizzazione degli iper-parametri tramite Optuna
  - "Image_Acquisition"               » Script per l'acquisizione e il successivo cropping delle immagini utilizzate come dataset
