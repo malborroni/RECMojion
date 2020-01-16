@@ -1,9 +1,15 @@
-- "Scraping" è uno script per lo scraping di immagini da Google
-- "3-Fold_Generator" è uno script per la creazione di 3 fold con data augmentation per la cross validation
-- "Model_NN" è uno script per la valutazione di CNN e Fully Connected
-- "Model_Classifier" è uno script per la valutazione dei classificatori tradizionali
-- "Architecture_selection" è uno script per la valutazione di diverse architetture della CNN
-- "cut_selection_CNN" script per la ricerca del taglio migliore con cui fare features extraction
-- "HyperOpt" script di ottimizzazione degli iper-parametri tramite Optuna
-- "VGGFace_senet50_model_selectio" script per la valutazione tramite Cross-Validation del modello con fine tuning della rete vggface (senet50)
+Qui di seguito si riporta una spiegazione sintetica per ognuno dei Notebook consegnati:
 
+ - "3-Fold_Generator"                » Script per la creazione di 3 fold con data augmentation per la cross validation
+ - "Architecture_selection"          » Script per la valutazione di diverse architetture della CNN
+ - "cut_selection_CNN"               » Script per la ricerca del taglio migliore con cui fare features extraction
+ - "DEMO_Live"                       » Script per l'effettuazione di un test in tempo reale dell'efficacia del modello sviluppato
+ - "HyperOpt"                        » Script per l'ottimizzazione degli iper-parametri tramite Optuna
+ - "Image_Acquisition"               » Script per l'acquisizione e il successivo cropping delle immagini utilizzate come dataset
+ - "Model_Classifier"                » Script per la valutazione dei classificatori tradizionali
+ - "Model_NN"                        » Script per la valutazione di CNN e Fully Connected
+ - "Scraping"                        » Script per lo scraping di immagini da Google
+ - "utils"                           » Script da avere nella stessa cartella in cui si lancia "DEMO_Live", contenente funzioni di supporto
+ - "VGGFace_senet50_model_selection" » Script per la valutazione tramite Cross-Validation del modello con fine 
+                                       tuning della rete vggface (senet50)
+ 
