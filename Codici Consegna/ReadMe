@@ -3,4 +3,7 @@
 - "Model_NN" è uno script per la valutazione di CNN e Fully Connected
 - "Model_Classifier" è uno script per la valutazione dei classificatori tradizionali
 - "Architecture_selection" è uno script per la valutazione di diverse architetture della CNN
+- "cut_selection_CNN" script per la ricerca del taglio migliore con cui fare features extraction
+- "HyperOpt" script di ottimizzazione degli iper-parametri tramite Optuna
+- "VGGFace_senet50_model_selectio" script per la valutazione tramite Cross-Validation del modello con fine tuning della rete vggface (senet50)
 
