@@ -1,0 +1,560 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "SVM.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "toc_visible": true,
+      "machine_shape": "hm",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "accelerator": "GPU"
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/malborroni/RECMojion/blob/master/Model_Classifier.pynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "kui2vE2WuFh2",
+        "colab_type": "text"
+      },
+      "source": [
+        "# Classificatori tradizionali\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "s5J3aj9wuMg6",
+        "colab_type": "text"
+      },
+      "source": [
+        "Valutazione in 5-fold cross validation dei modelli\n",
+        "- feature extraction + SVC \n",
+        "- feature extraction + Random Forest\n",
+        "- feature extraction + KNeighbors\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "uLZXM84IFrM-",
+        "colab_type": "text"
+      },
+      "source": [
+        "**Introduzione**"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "AV5KJvi4FsEu",
+        "colab_type": "text"
+      },
+      "source": [
+        "Rete VGG face usata come feature extractor per un classificatore lineare. La speranza è che una rete trainata per riconoscere le facce sia piuttosto affine ad un task come il nostro di riconscimento di emozioni e dunque che con un taglio adatto si abbia una efficace face embedding, ovvero una rappresentazione ad altro livello di un volto, facllmente classificabile a questo punto da un classificatore classico"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "mai4tOFSz-7j",
+        "colab_type": "text"
+      },
+      "source": [
+        "# Import Librerie"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "iG2PTfwE3jW0",
+        "colab": {}
+      },
+      "source": [
+        "import keras\n",
+        "from keras.datasets import mnist \n",
+        "from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D, Dropout\n",
+        "from keras.models import Model, Sequential, load_model\n",
+        "from keras.utils import to_categorical, np_utils \n",
+        "from keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input\n",
+        "from keras.callbacks import EarlyStopping, ModelCheckpoint\n",
+        "from keras import regularizers\n",
+        "\n",
+        "from numpy import expand_dims,asarray\n",
+        "from PIL import Image\n",
+        "import random as rnd\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "from matplotlib import style\n",
+        "style.use('seaborn-pastel')\n",
+        "\n",
+        "from sklearn.metrics import classification_report, accuracy_score,confusion_matrix\n",
+        "from sklearn.preprocessing import LabelEncoder\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "\n",
+        "import cv2 as cv\n",
+        "import os"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "p8lKZ2yygmA7",
+        "colab_type": "text"
+      },
+      "source": [
+        "# Dataset"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "JjvlnMkv23Ug",
+        "colab_type": "code",
+        "outputId": "33b5cfd9-2b38-4e1e-9d48-6f9f3749485f",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 126
+        }
+      },
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/gdrive')"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Go to this URL in a browser: https://accounts.google.com/o/oauth2/auth?client_id=947318989803-6bn6qk8qdgf4n4g3pfee6491hc0brc4i.apps.googleusercontent.com&redirect_uri=urn%3aietf%3awg%3aoauth%3a2.0%3aoob&response_type=code&scope=email%20https%3a%2f%2fwww.googleapis.com%2fauth%2fdocs.test%20https%3a%2f%2fwww.googleapis.com%2fauth%2fdrive%20https%3a%2f%2fwww.googleapis.com%2fauth%2fdrive.photos.readonly%20https%3a%2f%2fwww.googleapis.com%2fauth%2fpeopleapi.readonly\n",
+            "\n",
+            "Enter your authorization code:\n",
+            "··········\n",
+            "Mounted at /content/gdrive\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "nIDLsPlfbLvG",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import pickle\n",
+        "with open('/content/gdrive/My Drive/AML/Prima parte/XY.pkl', 'rb') as infile:\n",
+        "    result = pickle.load(infile)\n",
+        "X,Y=result"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "aORp-IYI44y1",
+        "colab_type": "text"
+      },
+      "source": [
+        "# Preprocessing e Feature Extraction"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "fP9FTHIdcIOt",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import numpy as np\n",
+        "X = np.array(X)\n",
+        "Y = np.array(Y)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ulguUoVgcdnI",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "from sklearn.preprocessing import LabelEncoder\n",
+        "from keras.utils import to_categorical\n",
+        "le = LabelEncoder()\n",
+        "Y = le.fit_transform(Y)\n",
+        "#Y = to_categorical(Y, num_classes = 7)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "8qN64RcDITqM",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "! sudo pip install git+https://github.com/rcmalli/keras-vggface.git\n",
+        "# Example of face detection with a vggface2 model\n",
+        "\n",
+        "import keras_vggface\n",
+        "from keras_vggface.vggface import VGGFace\n",
+        "from keras_vggface.utils import preprocess_input\n",
+        "from keras_vggface.utils import decode_predictions"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "5ipb1Jr-IelL",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "base_model = VGGFace(include_top = False, input_shape = (224, 224, 3), model='senet50')"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "gOkrwBajIux8",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "X = preprocess_input( X.astype('float64'),version=2)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "iwYXvS8xAYJu",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "base_model.summary()"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_KNCDtsHbi1O",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "model = Model(inputs=base_model.input, outputs=base_model.get_layer(\"global_average_pooling2d_13\").output)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "GL0OPnrgeoYU",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "X = model.predict(X)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "6_C8B6cPe-yM",
+        "colab_type": "code",
+        "outputId": "9fe69351-932b-4907-bf80-6a9f88e0c2af",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        }
+      },
+      "source": [
+        "X.shape"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(2590, 1024)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 37
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "pKIazhDq3q8f",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "kfold_acc = {}\n",
+        "# dizionario per salvare la accuracy dei diversi modelli"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "c0OisODWilNF",
+        "colab_type": "text"
+      },
+      "source": [
+        "# K fold\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "p2PNcTrKZ94E",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "from sklearn.model_selection import StratifiedKFold\n",
+        "import numpy\n",
+        "# fix random seed for reproducibility\n",
+        "seed = 42\n",
+        "numpy.random.seed(seed)\n",
+        "# define 10-fold cross validation test harness\n",
+        "kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)\n"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tsvoD5-m5XLX",
+        "colab_type": "text"
+      },
+      "source": [
+        "## SVC"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "x1cwv62CtOUC",
+        "colab_type": "code",
+        "outputId": "07f0df37-440d-4e63-b1e3-75f157680f5e",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 52
+        }
+      },
+      "source": [
+        "from sklearn.svm import SVC\n",
+        "from sklearn.model_selection import KFold, cross_val_score\n",
+        "clf = SVC(random_state=42)\n",
+        "accuracy = cross_val_score(clf, X, Y, scoring='accuracy', cv = kfold, n_jobs=-1)\n",
+        "print(accuracy)\n",
+        "#get the mean of each fold \n",
+        "print(\"Accuracy of Model with Cross Validation is: %.2f%% (+/- %.2f%%)\"% (np.mean(accuracy), np.std(accuracy)))\n"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[0.86486486 0.87451737 0.9034749  0.88030888 0.87451737]\n",
+            "Accuracy of Model with Cross Validation is: 0.88% (+/- 0.01%)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "clTfmS1E3-QP",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "kfold_acc[\"SVC\"]=(np.mean(accuracy), np.std(accuracy))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "9aUk2Fjc5Z2J",
+        "colab_type": "text"
+      },
+      "source": [
+        "## Random Forest"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "88sW5t4ktsdr",
+        "colab_type": "code",
+        "outputId": "1d52453e-4bf2-43b0-dc1c-7d995569ad75",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 52
+        }
+      },
+      "source": [
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.datasets import make_classification\n",
+        "from sklearn.model_selection import KFold, cross_val_score\n",
+        "clf = RandomForestClassifier(random_state=42)\n",
+        "accuracy = cross_val_score(clf, X, Y, scoring='accuracy', cv = kfold, n_jobs=-1)\n",
+        "print(accuracy)\n",
+        "#get the mean of each fold \n",
+        "print(\"Accuracy of Model with Cross Validation is: %.2f%% (+/- %.2f%%)\"% (np.mean(accuracy), np.std(accuracy)))"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[0.9034749  0.87644788 0.90540541 0.85328185 0.87451737]\n",
+            "Accuracy of Model with Cross Validation is: 0.88% (+/- 0.02%)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "-6jkVlk238zs",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "kfold_acc[\"RandomForest\"]=(np.mean(accuracy), np.std(accuracy))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "JYOvgM4A5dPy",
+        "colab_type": "text"
+      },
+      "source": [
+        "## KNeighbors"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "07wQXOyG2wqH",
+        "colab_type": "code",
+        "outputId": "931616f3-ad18-42f2-fe4f-591f004ffe7a",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 52
+        }
+      },
+      "source": [
+        "from sklearn.neighbors import KNeighborsClassifier\n",
+        "neigh = KNeighborsClassifier(random_state=42)\n",
+        "accuracy = cross_val_score(neigh, X, Y, scoring='accuracy', cv = kfold, n_jobs=-1)\n",
+        "print(accuracy)\n",
+        "#get the mean of each fold \n",
+        "print(\"Accuracy of Model with Cross Validation is: %.2f%% (+/- %.2f%%)\"% (np.mean(accuracy), np.std(accuracy)))"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[0.85604607 0.89423077 0.84362934 0.90310078 0.86796117]\n",
+            "Accuracy of Model with Cross Validation is: 0.87% (+/- 0.02%)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "S9luQ8Ss4Kls",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "kfold_acc[\"KNeighbors\"]=(np.mean(accuracy), np.std(accuracy))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "i_m2rD0_4TsU",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import json\n",
+        "\n",
+        "json = json.dumps(kfold_acc)\n",
+        "f = open(\"/content/gdrive/My Drive/AML/kfold_acc.json\",\"w\")\n",
+        "f.write(json)\n",
+        "f.close()"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
