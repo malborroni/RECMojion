@@ -1,1 +1,6 @@
+- "Scraping" è uno script per lo scraping di immagini da Google
+- "3-Fold_Generator" è uno script per la creazione di 3 fold con data augmentation per la cross validation
+- "Model_NN" è uno script per la valutazione di CNN e Fully Connected
+- "Model_Classifier" è uno script per la valutazione dei classificatori tradizionali
+- "Architecture_selection" è uno script per la valutazione di diverse architetture della CNN
 
