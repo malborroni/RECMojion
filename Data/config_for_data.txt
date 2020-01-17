@@ -1,5 +1,0 @@
-
-setup number for emotion --> in column "emotion"
-(0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral)
-
-in coloumn "pixels", save the images (array, [0,255] int)
