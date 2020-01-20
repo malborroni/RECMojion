@@ -15,22 +15,40 @@
 
 <a name="overview"></a>
 ## &#9741; &nbsp; Overview
-Just a start repository for the Advanced Machine Learning course.
+This work proposes a series of **Deep Learning** models aimed at addressing the problem of recognizing emotions through facial expressions. The experiments were conducted on a dataset made by us, aggregating images acquired via webcam and wild images collected by Google, augmented with Data Augmentation techniques. <br>
+For the best model, resulting in a convolutional network associated with a Feature Extraction by VGGFace, several architectures were explored, followed by a pipe of *Hyper Parameter Optimization* (HPO) with *Sequential Model-Based Optimization* (SMBO) methods.
 
 <br>
-
+<br>
+<p align="center">
+  <a href="https://github.com/malborroni/RECMojion/blob/master/images/miscellaneous/All%20together.png"><img src = "https://github.com/malborroni/RECMojion/blob/master/images/miscellaneous/All%20together.png" width = "70%"></a>
+</p>
 
 <a name="references"></a>
 ## &#9741; &nbsp; References
-All the references for this project are available in the <a href="https://fakefakefake">ref</a> folder.
+[1] P. Abhang, S. Rao, B. W. Gawali, and P. Rokade (2011), *Emotion recognition using speech and eeg signal a review*, International  Journal  of  Computer  Applications,  vol.  15, pp. 37–40<br>
+[2] P. Ekman (1971), *Universals and cultural differences in facial expressions of emotion*, Lincoln University of Nebraska Press, Nebraska, USA<br>
+[3] A. Kołakowska, A. Landowska, M. Szwoch, W. Szwoch, and M. R. Wróbel (2014), *Emotion Recognition and Its Applications*, Cham: Springer International Publishing, pp. 51–62<br>
+[4] Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman (2018), *VGGFace2: A dataset for recognising face across pose and age*, International Conference on Automatic Face and Gesture Recognition 
 
 <a name="data"></a>
 ## &#9741; &nbsp; Data
-All the data used for this project are available in the <a href="https://fakelink">data</a> folder and <a href="https://www.fakesite">here</a>
+The dataset used was obtained thanks to the union of three different data sources, in which the same data are found in the form of images of different dimensions.<br>
+The data used for this project are:
+- RECData » available in the <a href="https://fakelink">RECData</a> folder (soon);
+- VISGRAF » available at the following <a href="http://app.visgraf.impa.br/database/faces/download-with-email/">link</a>;
+- Scraping » available in the <a href="https://fakelink">Google data</a> folder (soon).
 
 <a name="presentation"></a>
 ## &#9741; &nbsp; Presentation
-Our slides presentation is available in the <a href="https://fakelink">slides</a> folder. 
+Our slides presentation is available in the <a href="https://fakelink">slides</a> folder.<br>
+Here we show only the cover:
+
+<br>
+<p align="center">
+  <a href="https://github.com/malborroni/RECMojion/blob/master/images/miscellaneous/Cover%20official.PNG"><img src = "https://github.com/malborroni/RECMojion/blob/master/images/miscellaneous/Cover%20official.PNG" width = "90%"></a>
+</p>
+
 
 <a name="aboutus"></a>
 ## &#9741; &nbsp; About us
