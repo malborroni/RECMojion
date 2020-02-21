@@ -1,0 +1,412 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
+% move this file to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\title{Title page with logo}
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt]{article}
+\usepackage[italian]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{hyperref}
+\usepackage{booktabs,array}
+\usepackage{tabto}
+\usepackage{systeme, mathtools}
+\usepackage{amssymb}
+%\usepackage{varioref}
+\usepackage{float}
+\restylefloat{table}
+\usepackage[title]{appendix}
+\usepackage[margin=3cm]{geometry}
+\usepackage{enumitem}
+
+\renewcommand{\floatpagefraction}{.9}
+%\usepackage[autostyle]{csquotes}
+%\MakeOuterQuote{"}
+\graphicspath{{images/}}
+
+\begin{document}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Università degli Studi di Milano-Bicocca}\\[1cm] % Name of your university/college
+\textsc{\Large Advanced Machine Learning }\\[0.3cm] % Major heading such as course name
+\textsc{\large Final Project}\\[0.1cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries RECMojion}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\large
+\emph{Autori:}\\
+Alessandro Borroni - 800069 - a.borroni2@campus.unimib.it \\   % Your name
+Andrea Corvaglia - 802487 - a.corvaglia3@campus.unimib.it \\
+Massimiliano Perletti - 847548 - m.perletti2@campus.unimib.it  \\ [1cm] % Your name
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise 
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics[scale=0.15]{logouni.png}\\[1cm] % Include a department/university logo - this will require the graphicx package
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%%%%
+
+\tableofcontents
+\setcounter{page}{0}
+\thispagestyle{empty}
+\vspace{5mm}
+
+
+\clearpage
+%\thispagestyle{empty}
+%%%%%
+
+\begin{abstract}
+In questo lavoro vengono proposti una serie di modelli di Deep Learning volti ad affrontare il problema del riconoscimento delle emozioni tramite espressioni facciali. Gli esperimenti sono stati condotti su un dataset da noi realizzato, aggregando immagini acquisite via webcam e immagini wild raccolte da Google, aumentate con tecniche di Data Augmentation. Per il modello migliore, risultato in una rete convoluzionale associata ad una Feature Extraction dalla VGGFace, sono state esplorate diverse architetture, seguite da una pipe di Hyper Parameter Optimization (HPO) con metodi Sequential Model Based Optimization (SMBO). 
+
+\end{abstract}
+
+\section{Introduzione}
+Le emozioni mediano e facilitano le interazioni tra gli esseri umani. Pertanto, comprendere l'emozione porta spesso il contesto a una comunicazione sociale apparentemente bizzarra e/o complessa.\\
+L'emozione può essere riconosciuta attraverso una varietà di mezzi come l'intonazione della voce, il linguaggio del corpo e metodi più complessi come l'elettroencefalografia (EEG) \cite{article1}. 
+
+Tuttavia, il metodo più semplice e pratico è esaminare le espressioni facciali. Esistono sette tipi di emozioni umane riconosciute universalmente nelle diverse culture \cite{article2}: \textit{rabbia}, \textit{disgusto}, \textit{paura}, \textit{felicità}, \textit{tristezza}, \textit{sorpresa}, \textit{disprezzo}. È interessante notare che, anche per espressioni complesse, in cui un mix di emozioni potrebbe essere usato come descrittore, si osserva ancora un accordo interculturale \cite{article3}. Pertanto, un'utilità che rileva le emozioni dalle espressioni facciali sarebbe ampiamente applicabile. Volendo fare un esempio, un simile progresso potrebbe portare applicazioni in medicina, marketing e intrattenimento \cite{article4}.
+
+Sin da quando i computer sono stati sviluppati, scienziati e ingegneri hanno pensato a sistemi artificialmente intelligenti che sono mentalmente e/o fisicamente equivalenti agli esseri umani.\\ Negli ultimi decenni, l'aumento del potere computazionale generalmente disponibile ha fornito una mano per lo sviluppo di macchine per l'apprendimento rapido, mentre Internet ha fornito un'enorme quantità di dati per l'addestramento (training). Questi due sviluppi, insieme, hanno rafforzato la ricerca sui sistemi intelligenti di autoapprendimento, con le reti neurali tra le tecniche più promettenti.
+
+Una delle principali nonché attuali applicazioni dell'intelligenza artificiale che utilizza reti neurali è il riconoscimento di volti in foto e video. La maggior parte delle tecniche in letteratura si basa sull'elaborazione dei dati visivi e sulla successiva ricerca di schemi generali presenti nei volti umani. Il riconoscimento facciale può essere utilizzato a fini di sorveglianza dalle forze dell'ordine e nella "gestione e controllo della folla". 
+Altre applicazioni odierne comportano la sfocatura automatica dei volti sui filmati di Google Streetview e il riconoscimento automatico degli amici di Facebook nelle foto caricate sul Social. Lo sviluppo ancora più avanzato in questo campo è il \textbf{riconoscimento delle emozioni}. Oltre a identificare solo i volti, il computer utilizza la disposizione e la forma di, per esempio, sopracciglia e labbra per determinare l'espressione facciale e quindi la relativa emozione di una persona. Una possibile applicazione di ciò si trova nell'area della sorveglianza e dell'analisi comportamentale da parte delle forze dell'ordine. Ma non solo: tali tecniche sono utilizzate nelle fotocamere digitali per scattare automaticamente foto nel momento in cui l'utente sorride.\\
+Tuttavia, le applicazioni più promettenti comportano l'umanizzazione di sistemi artificialmente intelligenti. Se i computer sono in grado di tenere traccia dello stato mentale dell'utente, i robot possono reagire e comportarsi in modo appropriato. Il riconoscimento delle emozioni, quindi, svolge un ruolo chiave nel migliorare l'interazione uomo-macchina.
+
+Il compito del riconoscimento delle emozioni è particolarmente complicato in quanto classificare l'emozione può essere difficile a seconda che l'immagine in ingresso sia statica o un frame di transizione in un'espressione facciale. Questo problema è particolarmente difficile per il rilevamento in tempo reale in cui le espressioni facciali variano in modo dinamico.
+
+In questa ricerca ci si concentrerà principalmente su sistemi artificialmente intelligenti basati su reti neurali in grado di derivare l'emozione di una persona attraverso foto del suo viso. Verranno sperimentati approcci diversi dalla letteratura esistente e saranno valutati i risultati di varie scelte nel processo di progettazione. 
+\paragraph{Problema:} l'intento è quello di sfruttare tecniche di riconoscimento d'immagini per individuare determinate emozioni, più precisamente sette (\textit{arrabbiato}, \textit{disgustato}, \textit{felice}, \textit{impaurito}, \textit{neutrale}, \textit{sorpreso}, \textit{triste}, come rappresentato in Figura \ref{R1}), analizzando le espressioni facciali presenti in alcune foto di test e di fornire, insieme all'emozione individuata nelle stesse, l'emoji in grado di riassumere al meglio tale emozione. L'idea di affrontare questo task nasce originariamente dalla volontà di rappresentare con strumenti ai giorni d'oggi ampiamente utilizzati, quali le emoji o emoticon, alcuni espressioni facciali tra le più comuni.\\
+Per capire l'utilità di tale task, partendo da questa idea si potrebbe dar vita a un modello in grado di riconoscere una determinata espressione tramite la fotocamera interna del cellulare, immettendo la relativa emoji direttamente nel testo che si sta componendo, senza doverla necessariamente cercare tra le tante disponibili.
+
+\begin{center}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale = 0.36]{{"emoji_eng".png}}
+    \caption{Emoji rappresentanti le emozioni prese in considerazione nel progetto}
+    \label{R1}
+\end{figure}
+
+\end{center}
+
+\paragraph{Domanda di ricerca:} come possono essere utilizzate tecniche di Deep Learning per interpretare l'espressione facciale di un essere umano e carpirne l'emozione? 
+
+\paragraph{Approccio:} per questo particolare problema si è deciso di utilizzare tecniche apprese durante il corso di Advanced Machine Learning, con l'obiettivo finale di creare un modello che fosse in grado di individuare eventuali volti presenti in alcune immagini di input, evidenziare la zona relativa al volto, riconoscere l'emozione assunta dal soggetto e associare alla stessa una emoji in grado di riassumere al meglio tale emozione. Il tutto è arricchito da diverse sperimentazioni volte a ottimizzare architettura e iper-parametri.
+
+% Bisogna mettere giù due righe sull'approccio %
+
+\section{Dataset}
+Il dataset utilizzato è stato ottenuto grazie all'unione di tre differenti fonti di dati, in cui gli stessi dati si trovano sotto forma di immagini di diversa dimensionalità. Il metodo principale, nonché il primo a essere stato adottato, è consistito in una raccolta "manuale", attraverso l'acquisizione, tramite webcam integrata del computer portatile, di circa un centinaio di immagini per ognuna delle emozioni considerate, con l'intento di preparare la rete utilizzata al tipo di immagini che avrebbe ricevuto in input nella fase di testing. Questo metodo ha permesso di raccogliere circa 2'100 immagini in totale. In aggiunta a questa prima fonte di dati, si è deciso di ricorrere a tecniche di scraping, direttamente dal motore di ricerca Google, con il fine di integrare le immagini di partenza. Infine, si è deciso di utilizzare 144 immagini provenienti dal dataset VISGRAF, contenente volti umani di tipo animato realizzati in computer grafica, le quali immagini rappresentano sei emozioni di nostro interesse tra quelle riconosciute universalmente e citate da Paul Ekman nell'articolo summenzionato.
+
+\subsection{RECData (acquisizione delle immagini)}
+Per l'acquisizione si è dato vita a dei codici scritti in linguaggio Python con il fine di automatizzare il tutto. Tale script si appoggia sulla libreria OpenCV, molto diffusa in ambito di Computer Vision e gestione delle immagini.\\
+L'acquisizione effettiva avviene sfruttando la webcam integrata del PC portatile su cui lo script viene lanciato. Il processo prevede una unica sessione, corrispondente a un singolo lancio del codice, in cui viene scattato un numero prestabilito di foto senza interruzioni. Per evitare di acquisire immagini mosse, vista la scarsa risoluzione della camera utilizzata, è stato stabilito un time-sleep di mezzo secondo, il che significa che lo scatto avviene ogni mezzo secondo circa (bisogna considerare un ritardo quasi trascurabile dovuto all'esecuzione del codice stesso).\\
+Tutte le foto vengono salvate nelle relative cartelle (una per ognuna delle emozioni considerate, tutte raccolte in una macro-cartella denominata "raw\_images"), così da facilitare l'assegnazione delle label, corrispondenti al nome delle cartelle stesse.
+Le immagini ivi raccolte hanno una dimensionalità di 1280x720 pixel, come specificato dalla  funzione creata in questo script, e sfruttano la scala colore Red-Green-Blue (RGB).
+
+\subsection{Scraping (integrazione)}
+Il dataset acquisito è stato arricchito con uno scraping da Google immagini, in particolare sono state usate delle queries che comprendessero sia sinonimi delle emozioni considerati (es. mad per angry) sia diverse espressioni per il tipo di immagini considerate (es. portrait, close-up). Questo enfatizzando che le immagini ritraessero persone scrivendo "human face" e sottraendo alla query riferimenti a disegni,loghi, etc.
+Dopo alcune queries per ogni emozione le immagini sono state esaminate a mano per verificare la loro appropriatezza. Si sottolinea il fatto che è stata selezionata la dimensione delle immagini in modo che fossero maggiori del target, il quale prevedeva immagini di dimensione 224x224x3 (pixel, pixel, canali). Lo scraping è stato effettuato con l'ausilio del pacchetto google\_images\_download.
+Esempio di una query: "angry mad upset human face portrait close-up -cartoon -drawing -logo -emoji".
+
+\subsection{VISGRAF (integrazione)}
+Il database VISGRAF (o IMPA-FACE3D) è stato creato nel 2008 per aiutare nella ricerca sull'animazione facciale. In particolare, per l'analisi e la sintesi di volti ed espressioni. A tale scopo, è stato preso, come base, il volto neutro (cioè il volto con la posizione della fotocamera frontale di zero gradi e senza espressione facciale) e le sei espressioni universalmente riconosciute proposte da Ekman: felicità, tristezza, sorpresa, rabbia, disgusto, e paura (il disprezzo è escluso). La caratteristica principale di questo set di dati è una registrazione delle informazioni geometriche con il colore (ovvero, la geometria e la trama sono correlate).\\
+Questo set di dati include acquisizioni di 38 individui con un campione di viso neutro, campioni corrispondenti a sei espressioni facciali universali e altre espressioni che si riferiscono a 5 campioni contenenti bocca e occhi aperti e/o chiusi. Inoltre, sono stati considerati due campioni corrispondenti ai profili laterali degli individui. Complessivamente, il set di dati è composto da 22 uomini e 16 donne, con la maggior parte delle persone di età compresa tra 20 e 50 anni. Sono stati acquisiti 14 campioni per tutti gli individui, riassumendo in totale 532 campioni. Di questi, tuttavia, ne sono stati utilizzati solo 144, in quanto più idonei allo scopo del progetto raccontato in questo report.
+
+\subsection{Cropping delle immagini}
+Per tutte le foto facenti parte del dataset finale si è deciso di optare per un ritaglio delle stesse in modo da ricondurle a una dimensionalità consona per le future elaborazioni. Si è scelto di ridurle a un formato quadrato di 224x224 pixel.\\
+Per fare ciò è stato implementato uno script, utilizzando Python come linguaggio di programmazione, il quale si occupava di ricevere in input tutte le immagini raccolte nella cartella "raw\_images", rilevare la presenza di eventuali volti nelle stesse (grazie a un classificatore utilizzato appositamente per rilevare l'oggetto per il quale è stato addestrato, in questo caso volti frontali), e, seguendo il bounding box restituito tramite questo processo, ritagliare il volto restituendo un immagine quadrata della dimensione specificata.
+Le immagini vengono mantenute su tre canali anche in questa fase finale (RGB).
+
+\subsection{Data Augmentation}
+
+La Data Augmentation è un processo volto ad aumentare la quantità e la diversità dei dati. Il concetto basilare consiste nel non dover raccogliere nuovi dati, quanto nel trasformare quelli già presenti.\\
+Per questo progetto si è scelto di utilizzare la libreria albumentations, la quale è una tra le più veloci librerie di potenziamento dell'immagine.
+
+Le immagini, solo ed esclusivamente quelle di training, vengono passate in input a una funzione che si occupa di quadruplicarle. Queste foto subiscono delle trasformazioni secondo la seguente distribuzione di probabilità:
+\begin{itemize}
+\item50\% che venga ruotata (di 60° oppure di -60°);
+\item50\% che avvenga uno shift dei canali RGB;
+\item50\% che subisca una variazione in contrasto e/o luminosità;
+\item50\% che l'immagine sia sottoposta a una tra le seguenti trasformazioni: sfocatura, sfocatura in movimento, rumore Gaussiano)
+\end{itemize}
+
+Essendo il dataset finale a disposizione non eccessivamente grande, si è deciso di optare per questa tecnica al fine di ottenere una generalizzazione nonostante la scarsità di dati e specialmente per ridurre il rischio di overfitting nella fase di training.
+
+\section{Approccio Metodologico}
+
+\subsection{Model Selection}
+Per poter affrontare il task si è effettuata una comparazione di diversi modelli, basati su tecniche di \textit{Transfer Learning}. Questo per una duplice ragione: da una parte la disponibilità di reti molto performanti per il riconoscimento facciale, dall'altra il dataset di piccole dimensioni.
+
+È stata selezionata la rete VGGFace, la quale sfrutta delle architetture originali come VGG16, ResNet50 e Senet50, addestrate, però, sul dataset \textit{VGGFace} \cite{article5} invece che su \textit{ImageNet}.\\
+Da questi pesi, i quali sono stati calcolati sull'addestramento di numerosi volti, invece che su classi di animali, oggetti et similia, ci si può aspettare una performance migliore per il task preso in considerazione nel progetto.
+
+\subsubsection{Senet50 (Fine-Tuning)}
+
+Il primo metodo considerato è stato il \textit{Fine Tuning}, nel quale viene sfruttata una rete addestrata su una base di dati molto grande e che quindi possiede già dei pesi efficaci per il task per cui è stata allenata. Questi si possono sfruttare come punto di partenza in un modello finale, il quale viene addestrato, invece, sui dati in nostro possesso, così da specializzare la rete per il nuovo task. 
+
+Si è dunque importata la rete VggFace (con versione Senet50), tagliando gli ultimi layers \textit{fully connected} e andando a bloccare i pesi fino alla coda della rete (nello specifico fino al layer\\\textit{"conv5\_3\_1x1\_reduce/bn"}) per poter escludere la maggior parte dei pesi dal nuovo addestramento. Al contrario, gli ultimi layers rimasti "sbloccati" andranno a contribuire nell'addestramento della nostra rete, partecipando nel calcolo dei nuovi pesi sul nostro dataset. In coda alla VGGFace, sono stati applicati dei layers \textit{Dense}, in totale tre (rispettivamente da 512, 256 e 32 neuroni), intervallati da livelli di \textit{Dropout} (con rate 0.5) per limitare l'overfitting. Segue, infine, un livello di output con il rispettivo layer dense (con 7 neuroni, pari alle classi da predire) e attivazione \textit{Softmax}.\\
+Si è scelto l'Adaptive Moment Estimation (Adam) come ottimizzatore perché è una forma di SGD con un learning rate adattivo, ma che vi accompagna anche una componente che tiene conto dei gradienti precedentemente calcolati (momento) a differenza di altri algoritmi come Adadelta e RMSprop. Vista la scelta dell'ottimizzatore si è utilizzato il learning rate di default come consigliato sulle references di keras. La funzione di Loss scelta è la categorical-crossentropy, in quanto classificazione multi-labels.
+
+Sono stati così raggiunti circa 27 milioni di parametri, di cui solo 5 milioni addestrabili; questo comporterà un fitting del modello sicuramente più lento rispetto alle successive architetture selezionate.
+Infine, in fase di training, viene usata come callback il ModelCheckpoint, per poter caricare i pesi migliori ottenuti durante l'addestramento e valutarli poi sul test set. Tutta la prova è eseguita in Cross-Validation (5 folds) per poter essere più robusta rispetto ad un semplice Hold-Out e di conseguenza meno dipendente rispetto al particolare set su cui viene addestrato il modello.
+
+\subsubsection{Rete Neurale Convoluzionale (CNN)}
+
+L'idea iniziale è stata quella di creare un'alternativa al Fine Tuning, che permettesse di usare le features a medio-alto livello di una rete molto grande come  \textit{VGGFace}, ma senza allenare i layers rimanenti. Questo perché, data la loro numerosità, si avrebbe un alto numero di parametri difficilmente modificabili da un training su un dataset creato da noi e dunque di dimensioni ridotte. 
+
+La filosofia di base per la rete è stata quella di mantenere molto basso il numero di parametri, visto che parte del lavoro di interpretazione dell'immagine avviene nella Feature Extraction, così da poter spingere di più l'ottimizzazione.
+
+L'architettura è una rivisitazione del modello VGG16, ma ridimensionata con il fine di mantenere basso il numero di parametri. Allo stesso modo, però, si è puntato sulla profondità del modello. Quest'ultimo è formato da un blocco di convoluzioni, con tre layers convoluzionali, nei quali sono stati usati filtri molto piccoli (3x3, e cioè la dimensione più piccola possibile, che cattura ancora sinistra/destra e su/giù). A questi sono stati aggiunti anche filtri di convoluzione 1x1 che agiscono come una trasformazione lineare dell'input. Lo stride è fissato a 1 pixel (valore di default) in modo che la risoluzione spaziale venga preservata dopo la convoluzione.\\
+In particolare, i tre filtri di ogni blocco sono in sequenza 1x1, 3x3 e 1x1. In questo modo si ottiene un modello abbastanza profondo da avere una consistente non linearità fermo restante il basso numero di parametri. Questa non linearità è raggiunta aggiungendo ad ogni layer, ad eccezione dell'output layer, una funzione di attivazione non lineare, in particolare una  \textit{ReLU}. \\
+Inoltre si è impiegato un MaxPooling alla fine del blocco di convoluzioni in modo da ridurre la dimensionalità dell'input e di conseguenza anche il numero dei parametri stessi nella parte finale della rete (Fully-Connected) ridotta ad un singolo hidden layer (210 neuroni) più l'output layer necessariamente da 7 (numero di classi).
+
+Come ottimizzatore si è usato l’Adaptive Moment Estimation (Adam), con Learning Rate impostato al valore di default.
+Per quanto riguarda il numero di epoche, questo è stato scelto in modo da attivare l'\textit{Early Stopping} basato sulla Loss function calcolata sul validation set. 
+La dimensione del batch (128) invece è stata scelta abbastanza grande da avere un andamento smussato della curva di Loss e Accuracy, ma non così tanto da perdere la regolarizzazione data da un gradiente approssimato.
+La funzione di Loss scelta è la categorical-crossentropy. Il problema è di classificazione multi-classe e dunque la funzione di output usata è stata la \textit{Softmax}.
+Infine come forma di regolarizzazione per evitare l'overfitting si è usato un \textit{Dropout} tra i due layer densi e un \textit{L2 Regularizer}.
+
+\subsubsection{Classificatori Tradizionali}
+Sono stati considerati tre diversi classificatori:
+\begin{itemize}
+    \item Support Vector Classifier (SVC)
+    \item Random Forest
+    \item K-Nearest Neighbors
+\end{itemize}
+Ogni classificatore è stato configurato con i parametri di default implementati da scikit-learn. Per quanto riguarda il taglio della rete, questo è stato scelto in una posizione simile a quella adoperata per i precedenti modelli, in particolare al più vicino AvgPooling precedente (\textit{global\_average\_pooling2d\_13}), scelto perché corrispondente a una riduzione di dimensionalità dell'output che permette di eseguire il training dei modelli in tempi contenuti senza l'utilizzo di ulteriori tecniche, come per esempio una Principal Component Analysis (PCA). 
+
+\subsection{Selezione Architettura}
+
+In seguito alla scelta del modello migliore (CNN), si è proceduto con l'ottimizzazione della Feature Extraction per quel modello, ovvero al confronto delle performance dello stesso su varie scelte di taglio sulla \textit{VGGFace}. Inizialmente si sono valutati tagli coerenti, ovvero su layers dello stesso tipo (tutti Activation) in diverse regioni della rete con il fine di identificare la regione migliore in cui continuare a cercare. In ogni caso, però, non è stato possibile valutare in questa prima fase quale fosse la regione ottimale, ma solo un'area abbastanza estesa di ricerca, ovvero dalla fine del blocco conv3, fino alla coda della rete. Entro questa area è stato valutato ogni possibile taglio. È possibile vedere i risultati nella Figura \ref{im4}, nel quale si nota una ciclicità nelle valutazioni, probabilmente dovuta alle diverse dimensioni degli output, a indicare che i più efficaci per l'estrazione sono i layer di attivazione. Al tempo stesso, si nota come un eccessivo avvicinamento alla parte finale della rete provochi una riduzione dell'Accuracy. Effetto causato anche da un taglio effettuato più indietro nella rete stessa.
+
+Selezionato il taglio migliore si è proceduto con una ristretta Architecture Selection, sostanzialmente sono state confrontate nove architetture: tre diverse scelte del numero dei layer in convoluzione e tre possibilità per i layer densi, in Figura \ref{screen1} è riportata la sezione di codice per la creazione dei diversi modelli.
+In particolare per quanto riguarda il blocco convoluzionale: C1 rappresenta la rete con i primi tre layer Conv2D, C2 aggiunge a questo un MaxPooling e un layer Conv2D e C3 aggiunge due layer Conv2D.
+Per quanto riguarda i layer densi, invece, ogni D aggiunge un layer Dense e un layer di Dropout. Si possono vedere i risultati nella tabella in Figura \ref{im5} e nel grafico in Figura \ref{im6}.
+
+È opportuno approfondire le modalità con le quali sono stati confrontati di volta in volta i modelli. La prima selezione tra Senet50, CNN e modelli tradizionali è avvenuta con un \textit{K-Fold Cross Validation} a 5 fold implementata con  \textit{Scikit-Learn}; per quanto riguarda la selezione dei tagli, i modelli sono stati confrontati ripetendo tre prove per ogni training, per ridurre la variabilità dovuta all'inizializzazione randomica dei pesi.\\
+Dalla selezione dell'architettura in poi è stata introdotta la Data Augmentation nel training. Per coniugare la Data Augmentation che deve avvenire solo sul training con una Cross Validation che fosse abbastanza veloce per eseguire qualche prova nella sezione di ottimizzazione finale, è stata adottata una strategia che seppur a discapito della RAM permette di eseguire la valutazione velocemente. Sostanzialmente è stato diviso il dataset in tre punti come una classica \textit{3-Fold Cross Validation}, ma invece di eseguire tre volte split, Data Augmentation e successiva Feature Extraction ad ogni valutazione di un modello, sono stati salvati in memoria tre fold composti da training, validation e test set, con training aumentato e a Feature Extraction già avvenuta.
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=0.75\textwidth]{{architecture_screenshot.png}} 
+         \caption{Funzione per la creazione dei modelli con le architetture da confrontare. La funzione prende in input il valore di C (profondità blocco convoluzionale) e il valore di D (profondità del blocco denso), i quali vanno da 1 a 3 e corrispondono alla profondità del modello. Come si nota dallo screen la funzione aggiunge al modello base layers in funzione dei valori di C e D scelti. \label{screen1}}
+\end{figure}
+
+\subsection{Ottimizzazione}
+
+Definita l'architettura del nostro modello, costituito da un solo blocco convoluzionale (3 layers Conv2D) e un solo layer Dense (oltre a quello finale di output), è stata definita una fase di ottimizzazione degli iper-parametri.
+
+Per raggiungere questo obiettivo si è deciso di utilizzare il framework \textit{Optuna}, compatibile con l'implementazione del nostro modello costruita in Keras. Si è deciso per questa soluzione per diversi motivi, tra i quali la possibilità, tramite una funzione di integrazione, di sfruttare la flessibilità e la potenza dell'ottimizzatore di \textit{skopt} (libreria che permette di minimizzare funzioni molto costose, di scikit-learn) e la semplicità di sintassi con cui programmare lo spazio di ricerca.
+Questa libreria possiede molte altre caratteristiche vantaggiose, come un'implementazione di un processo di \textit{Pruning}, che è una tecnica utile a ridurre lo spazio di ricerca, in quanto valuta alla prima epoca il valore della funzione obiettivo, e nel caso questo non sia potenzialmente valido, viene tagliato immediatamente rendendo così molto più rapido il processo. 
+Nativamente possiede molte funzioni per realizzare grafici utili a interpretare la scelta dei parametri e assicurarsi così che si stia compiendo un'efficace combinazione tra exploration ed exploitation, interpretando dai grafici l'andamento dell'ottimizzazione.
+
+Come \textit{Sampler}, ossia il campionatore del set dei parametri di ricerca, si è usato il Tree-structured Parzen Estimator (TPE), che si interfaccia con l'integrazione in \textit{skopt}, dove è stato selezionato come modello surrogato un Random Forest (RF), e come funzione di acquisizione che valuti i punti scelti dal surrogato il Lower Confidence Bound (LCB); questo perché tra i vari tentativi fatti è sembrata la configurazione che ottenesse dei minimi con un minor budget (numero di trial). Va sottolineato che il modello RF, per come è strutturato, è la scelta più naturale per la gestione di parametri categorici.
+
+Come spazio di ricerca per i parametri, si è concentrata l'ottimizzazione sui seguenti:
+\begin{itemize}
+    \item attivazione dei layers Conv2D e Dense (escluso output): "\textit{ReLU}" oppure "\textit{LeakyReLU}"
+    \item numero dei filtri ney layers Conv2D: range di interi [32, 256]
+    \item grandezza dei filtri (\textit{kernels-size}): range di interi [1, 5]
+    \item numero di neuroni nel layer Dense: range di interi [21, 490]
+    \item rate del layer di Dropout: range [0, 1, con passo 0.1]
+    \item il tipo di ottimizzatore: "\textit{Adam}", "\textit{rmsprop}" oppure "\textit{nadam}"
+    \item learning rate dell'ottimizzatore: un valore nel range continuo (1e-6, 1e-2]
+\end{itemize}
+Deciso lo spazio di ricerca, è stata definita la funzione obiettivo, la quale prevede la minimizzazione del valore complementare all'Accuracy (Errore). Le valutazioni sono state fatte in una Cross-Validation (3-fold) per limitare la randomicità nell'ottimizzazione.
+Infine il budget è stato impostato a 100 trial. %che altrimenti avrebbe potuto proseguire molto a lungo.
+Il processo di ottimizzazione è stato accompagnato da un collegamento ad un database SQLite che ha permesso di avere uno storico dei trials effettuati e dunque anche un backup per riprendere l'ottimizzazione in un secondo momento. Inoltre questo tipo di struttura permette una gestione distribuita del processo.
+Nel grafico in Figura \ref{im8} si vede l'andamento del Best Seen durante l'ottimizzazione e nel grafico in Figura \ref{im7}, invece, è mostrata una ColorMap di esempio sulla distribuzione della funzione obiettivo al variare delle variabili indicate.
+In seguito alla ottimizzazione abbiamo modificato la funzione di attivazione con una LeakyReLU, abbiamo aumentato il numero di neuroni (346) e il numero di filtri (191), nonché la dimensione del kernel (4) ed è stato confermato come ottimizzatore l'Adam, ma con Learning Rate di $1.3e^-5$. 
+
+\section{Risultati e Valutazioni}
+
+\subsection{Selezione del miglior Modello}
+
+
+% Model Selection %
+
+%\begin{figure}  [H]
+ %    \centering
+  %       \centering
+   %      \includegraphics[width=0.67\textwidth]{{models.png}} 
+    %     \caption{Barplot con le accuracy degli algoritmi considerati.\label{im2}}
+%\end{figure}
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=1\textwidth]{{Union.png}} 
+         \caption{Barplot e tabella con le Accuracy degli algoritmi considerati.\label{im3}}
+\end{figure}
+
+
+\subsection{Selezione del miglior Taglio}
+
+% Cut Selection %
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=\textwidth]{{layers.png}} 
+         \caption{Barplot con le Accuracy dei tagli considerati. Si noti che sono rappresentati solo i layers effettivamente valutati e questo esclude quelli con output troppo piccolo per entrare in input alla CNN implementata nel progetto. \label{im4}}
+\end{figure}
+
+\subsection{Selezione della migliore Architettura}
+
+% Architecture Selection %
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=0.7\textwidth]{{architectures_table.png}} 
+         \caption{Tabella con le Accuracy delle architetture considerate. \label{im5}}
+\end{figure}
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=0.8\textwidth]{{plot_architectures.png}} 
+         \caption{Barplot con le Accuracy delle architetture considerate. In particolare il primo grafico mostra solo le Accuracy, essendo l'asse verticale tagliato per enfatizzare le differenze tra le architetture e rendere comprensibili gli intervalli di confidenza evidenziati in grigio. Il secondo grafico mostra Loss e Accuracy a range intero, mentre il terzo taglia l'asse verticale a favore, questa volta ,della comprensibilità della Loss e dei suoi rispettivi intervalli di confidenza. \label{im6}}
+\end{figure}
+
+% Ottimizzazione %
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=1.1\textwidth]{{opt_plot1.png}} 
+         \caption{ColorMap che rappresenta il valore dell'Errore (1 - Accuracy) a coppie di iper-parametri. Rispettivamente filtri vs. neuroni e filtri vs. dim. filtri. Le zone in blu più scuro rappresentano valori elevati di errore e dunque configurazioni meno desiderabili.\label{im7}}
+\end{figure}
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=0.6\textwidth]{{opt_plot2.png}} 
+         \caption{Grafico della curva di Best Seen per il processo di ottimizzazione. Sono rappresentati anche i valori di Accuracy di ogni trial in blu. \label{im8}}
+\end{figure}
+
+\begin{figure}  [H]
+     \centering
+         \centering
+         \includegraphics[width=0.8\textwidth]{{loss.png}} 
+         \caption{Nel Grafico è rappresentata la curva di Loss e Accuracy per il training set e il validation del modello finale. \label{im9}}
+\end{figure}
+
+
+
+\section{Discussione dei Risultati}
+
+L'obiettivo di questo progetto era implementare il riconoscimento delle emozioni facciali, anche in real-time. 
+Il miglior modello risulta essere la CNN con un'Accuracy del 91.53\% (Figura \ref{im3}), che sale a 92.02\% (Figura \ref{im4}) nell'ottimizzazione del taglio per la Feature Extraction. Il valore scende a 89.73\% per via della Data Augmentation, la quale però riduce l'overfitting, probabile nel nostro dataset piccolo e su pochi soggetti. In ogni caso con l'architettura migliore sale a 90.39\% (Figura \ref{im5}), a significare che probabilmente il \textit{Max-Pooling} riduceva troppo la dimensione dei dati. Il modello finale è stato trainato su tutti i dati e in validation ottiene circa 92\% (Figura \ref{im9}).\\
+Possiamo quindi ritenerci soddisfatti dello score del modello, fermo restando la consapevolezza che il tutto è stato testato in un contesto controllato, con una certa monotonia delle condizioni di acquisizione delle immagini e dei soggetti ripresi.
+Per ottenere un'implementazione di maggiore successo sarebbe necessario progettare un set di dati molto più ampio per migliorare in questo modo la generalità del modello, e riconoscere più facilmente emozioni in condizioni non controllate di luce, distanza, orientamento e simili.
+
+\section{Conclusioni}
+
+Il lavoro ha portato ad una applicazione per il riconoscimento di emozioni a partire da espressioni facciali, anche in real-time. La pipeline di ottimizzazione ha portato a un miglioramento delle performance, tale da ritenere i risultati soddisfacenti.\\
+Futuri sviluppi dovrebbero focalizzarsi sulla costruzione di un dataset più corposo, atto a comprendere più soggetti nelle condizioni più disparate. 
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem{article1}
+P. Abhang, S. Rao, B. W. Gawali, and P. Rokade (2011) \emph{“Emotion recognition using speech and eeg signal a review”}, International  Journal  of  Computer  Applications,  vol.  15, pp. 37–40
+
+\bibitem{article2}
+P. Ekman (1971) \emph{"Universals and cultural differences in facial expressions of emotion"}, Lincoln University of Nebraska Press, Nebraska, USA
+
+\bibitem{article3}
+P. Ekman (1971) \emph{"Universals and cultural differences in facial expressions of emotion"}, Lincoln University of Nebraska Press, Nebraska, USA
+
+\bibitem{article4}
+A. Kołakowska, A. Landowska, M. Szwoch, W. Szwoch, and M. R. Wróbel (2014) \emph{"Emotion Recognition and Its Applications"}, Cham: Springer International Publishing, pp. 51–62
+
+\bibitem{article5}
+Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman (2018) \emph{"VGGFace2: A dataset for recognising face across pose and age"}, International Conference on Automatic Face and Gesture Recognition 
+
+
+\end{thebibliography}
+
+\begin{appendix}
+\appendix
+\section{Appendix: RECMojion Live Demo}
+Utilizzando la rete neurale appositamente addestrata con un rilevatore di volti fornito da OpenCV, abbiamo implementato con successo una Demo in cui un'emoji indicante una delle sette emozioni considerate (angry, disgust, fear, happy, neutral, sad, surprise) si accosta al volto di un utente, in tempo reale.
+Con l'uso del suddetto meccanismo di riconoscimento e detenzione dei volti, il volto che appare nel video viene monitorato, estratto e ridimensionato in un'immagine di dimensione 224x224. I dati così ottenuti vengono quindi inviati all'input del modello di rete neurale, il quale restituirà il nome dell'etichetta relativa (o emozione) con al suo fianco un punteggio da 0 a 1.0 esprimente l'Accuracy della classificazione. 
+Questo output verrà collocato in alto a sinistra, sopra il bounding box racchiudente il volto.
+
+\section{Appendix: Codice e Dati}
+L'intera struttura del progetto si è sviluppata su una repository GitHub.
+Pertanto, il codice completo e i risultati forniti sono disponibili all'indirizzo: \url{https://github.com/malborroni/RECMojion}.
+Si può fare riferimento al README.md della repository per ottenere informazioni sulla struttura della stessa.
+\end{appendix}
+
+
+\end{document}
